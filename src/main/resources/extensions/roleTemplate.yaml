@@ -1,0 +1,25 @@
+apiVersion: v1alpha1
+kind: Role
+metadata:
+  name: plugin-chunk-upload-role-manage
+  labels:
+    halo.run/role-template: "true"
+    rbac.authorization.halo.run/aggregate-to-super-role: "true"
+  annotations:
+    rbac.authorization.halo.run/module: "大文件分片上传"
+    rbac.authorization.halo.run/display-name: "使用大文件分片上传"
+    rbac.authorization.halo.run/ui-permissions: |
+      ["plugin:chunk-upload:manage"]
+rules:
+  - apiGroups: ["chunkupload.halo.run"]
+    resources:
+      - "uploads"
+      - "uploads/options"
+      - "uploads/init"
+      - "uploads/chunks"
+      - "uploads/complete"
+    verbs: ["get", "list", "create", "update", "patch", "delete", "deletecollection"]
+  - nonResourceURLs:
+      - "/apis/chunkupload.halo.run/v1alpha1/uploads/*"
+      - "/apis/chunkupload.halo.run/v1alpha1/uploads/**"
+    verbs: ["get", "post", "put", "delete"]

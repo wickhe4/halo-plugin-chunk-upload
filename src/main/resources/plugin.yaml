@@ -1,0 +1,20 @@
+apiVersion: plugin.halo.run/v1alpha1
+kind: Plugin
+metadata:
+  name: plugin-chunk-upload
+spec:
+  enabled: true
+  version: 1.0.5
+  requires: ">=2.25.0"
+  author:
+    name: wickhe4
+    website: https://github.com/wickhe4
+  logo: logo.svg
+  homepage: https://github.com/wickhe4/halo-plugin-chunk-upload#readme
+  repo: https://github.com/wickhe4/halo-plugin-chunk-upload
+  issues: https://github.com/wickhe4/halo-plugin-chunk-upload/issues
+  displayName: 大文件分片上传
+  description: 轻量级浏览器端分片上传与断点续传插件，绕过 Cloudflare 100MB 限制并将文件直接存入 Halo 原生附件库（使用 opencode 与 gemini-4-argon 构建）。
+  license:
+    - name: AGPL-3.0
+      url: https://github.com/wickhe4/halo-plugin-chunk-upload/blob/main/LICENSE

@@ -1,0 +1,75 @@
+plugins {
+    id 'java'
+    id "io.freefair.lombok" version "9.2.0"
+    id "run.halo.plugin.devtools" version "0.8.0"
+}
+
+group 'run.halo.chunkupload'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
+    maven { url 'https://repo.spring.io/milestone' }
+}
+
+dependencies {
+    implementation platform('run.halo.tools.platform:plugin:2.25.0')
+    compileOnly 'run.halo.app:api'
+    compileOnly 'org.springframework:spring-context'
+    compileOnly 'org.springframework:spring-core'
+    compileOnly 'org.springframework:spring-web'
+    compileOnly 'org.springframework.security:spring-security-core'
+    compileOnly 'io.projectreactor:reactor-core'
+    compileOnly 'com.fasterxml.jackson.core:jackson-annotations'
+
+    testImplementation 'run.halo.app:api'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+configurations.runtimeClasspath {
+    exclude group: 'org.springframework', module: 'spring-aop'
+    exclude group: 'org.springframework', module: 'spring-beans'
+    exclude group: 'org.springframework', module: 'spring-context'
+    exclude group: 'org.springframework', module: 'spring-core'
+    exclude group: 'org.springframework', module: 'spring-expression'
+    exclude group: 'org.springframework', module: 'spring-jcl'
+    exclude group: 'org.springframework', module: 'spring-web'
+    exclude group: 'org.springframework', module: 'spring-webflux'
+    exclude group: 'io.projectreactor', module: 'reactor-core'
+    exclude group: 'io.projectreactor', module: 'reactor-tools'
+    exclude group: 'io.projectreactor.netty', module: 'reactor-netty'
+    exclude group: 'io.projectreactor.netty', module: 'reactor-netty-core'
+    exclude group: 'io.projectreactor.netty', module: 'reactor-netty-http'
+    exclude group: 'org.reactivestreams', module: 'reactive-streams'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+    options.release = 21
+    options.compilerArgs += ['-parameters']
+}
+
+tasks.register('processUiResources', Copy) {
+    from project(':ui').layout.buildDirectory.dir('dist')
+    into layout.buildDirectory.dir('resources/main/ui')
+    dependsOn project(':ui').tasks.named('assemble')
+    shouldRunAfter tasks.named('processResources')
+}
+
+tasks.named('classes') {
+    dependsOn tasks.named('processUiResources')
+}
+
+halo {
+    version = '2.25'
+}

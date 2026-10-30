@@ -1,0 +1,24 @@
+plugins {
+    id 'base'
+}
+
+group 'run.halo.chunkupload.ui'
+
+tasks.register('pnpmBuild', Exec) {
+    group = 'build'
+    description = 'Build the UI project using system pnpm'
+    commandLine 'pnpm', 'run', 'build'
+    inputs.dir(layout.projectDirectory.dir('src'))
+    inputs.files(
+        layout.projectDirectory.file('package.json'),
+        layout.projectDirectory.file('pnpm-lock.yaml'),
+        layout.projectDirectory.file('rsbuild.config.ts'),
+        layout.projectDirectory.file('tsconfig.json'),
+        rootProject.layout.projectDirectory.file('src/main/resources/plugin.yaml')
+    )
+    outputs.dir(layout.buildDirectory.dir('dist'))
+}
+
+tasks.named('assemble') {
+    dependsOn tasks.named('pnpmBuild')
+}

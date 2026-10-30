@@ -1,0 +1,33 @@
+{
+  "name": "plugin-chunk-upload-ui",
+  "version": "1.0.5",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "rsbuild build",
+    "dev": "rsbuild build --env-mode development --watch",
+    "type-check": "vue-tsc --build"
+  },
+  "dependencies": {
+    "@halo-dev/api-client": "^2.20.0",
+    "@halo-dev/components": "^2.20.0",
+    "@halo-dev/ui-shared": "^2.20.0",
+    "axios": "^1.7.0",
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "@halo-dev/ui-plugin-bundler-kit": "^2.27.0",
+    "@rsbuild/core": "^2.1.0",
+    "@rsbuild/plugin-vue": "^2.0.1",
+    "@tsconfig/node20": "^20.1.0",
+    "@types/node": "^20.14.0",
+    "@vue/tsconfig": "^0.7.0",
+    "typescript": "~5.6.0",
+    "vue-tsc": "^2.1.0"
+  },
+  "pnpm": {
+    "ignoredBuiltDependencies": [
+      "core-js"
+    ]
+  }
+}

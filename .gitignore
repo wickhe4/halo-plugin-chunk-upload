@@ -1,0 +1,16 @@
+.gradle/
+build/
+workplace/
+!gradle/wrapper/gradle-wrapper.jar
+
+ui/node_modules/
+ui/build/
+ui/dist/
+ui/.rsbuild/
+ui/*.tsbuildinfo
+
+.idea/
+*.iml
+.vscode/
+.DS_Store
+*.log

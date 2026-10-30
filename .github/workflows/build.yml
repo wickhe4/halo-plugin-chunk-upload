@@ -1,0 +1,60 @@
+name: Build Halo Chunk Upload Plugin
+
+on:
+  push:
+    branches: [ main, master ]
+    tags: [ 'v*' ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 12
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+          cache-dependency-path: ui/pnpm-lock.yaml
+
+      - name: Install UI Dependencies and Type Check
+        working-directory: ui
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm run type-check
+
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 21
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build UI, Run Tests and Package Plugin JAR
+        run: ./gradlew clean build
+
+      - name: Upload Plugin JAR Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: plugin-chunk-upload-jar
+          path: build/libs/plugin-chunk-upload-*.jar
+
+      - name: Upload JAR to GitHub Release on Tag Push
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/libs/plugin-chunk-upload-*.jar
+          generate_release_notes: true
