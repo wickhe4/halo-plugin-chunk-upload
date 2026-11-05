@@ -1,0 +1,41 @@
+plugins {
+    id 'base'
+}
+
+group 'io.github.wickhe4.chunkupload.ui'
+
+tasks.register('pnpmBuild', Exec) {
+    group = 'build'
+    description = 'Build the UI project using system pnpm'
+    commandLine 'pnpm', 'run', 'build'
+    inputs.dir(layout.projectDirectory.dir('src'))
+    inputs.files(
+        layout.projectDirectory.file('package.json'),
+        layout.projectDirectory.file('pnpm-lock.yaml'),
+        layout.projectDirectory.file('rsbuild.config.ts'),
+        layout.projectDirectory.file('tsconfig.json'),
+        rootProject.layout.projectDirectory.file('src/main/resources/plugin.yaml')
+    )
+    outputs.dir(layout.buildDirectory.dir('dist'))
+}
+
+tasks.named('assemble') {
+    dependsOn tasks.named('pnpmBuild')
+}
+
+tasks.register('pnpmCheck', Exec) {
+    group = 'verification'
+    description = 'Run UI type-check using system pnpm'
+    commandLine 'pnpm', 'run', 'type-check'
+    inputs.dir(layout.projectDirectory.dir('src'))
+    inputs.files(
+        layout.projectDirectory.file('package.json'),
+        layout.projectDirectory.file('pnpm-lock.yaml'),
+        layout.projectDirectory.file('tsconfig.json')
+    )
+    outputs.upToDateWhen { true }
+}
+
+tasks.named('check') {
+    dependsOn tasks.named('pnpmCheck')
+}
